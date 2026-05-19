@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kin-Ha Experiences — Tu aventura continúa</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:    #0d7377;
+      --teal2:   #14a085;
+      --jungle:  #1a6b3c;
+      --jungle2: #228b4a;
+      --sand:    #f4ece1;
+      --dark:    #0f2027;
+      --gold:    #c9a84c;
+      --white:   #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--sand);
+      color: var(--dark);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,115,119,0.97);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 2rem;
+    }
+    .nav-logo {
+      font-size: 1.25rem; font-weight: 800; color: var(--white);
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a {
+      color: rgba(255,255,255,0.85); text-decoration: none;
+      font-size: 0.9rem; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 72vh;
+      background: linear-gradient(160deg, #0d3b3e 0%, #0d7377 55%, #1a6b3c 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 4rem 1.5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 60%, rgba(255,255,255,0.04) 0%, transparent 70%);
+    }
+    .hero-badge {
+      background: rgba(201,168,76,0.18); border: 1px solid var(--gold);
+      color: var(--gold); font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.35rem 1rem; border-radius: 999px;
+      margin-bottom: 1.5rem; display: inline-block;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 900; color: var(--white);
+      line-height: 1.15; margin-bottom: 1rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .hero h1 em { color: var(--gold); font-style: normal; }
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: rgba(255,255,255,0.82); max-width: 560px;
+      line-height: 1.7; margin-bottom: 2.5rem;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.8rem 1.8rem; border-radius: 999px;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      transition: all 0.22s; border: none; text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--gold); color: var(--dark);
+    }
+    .btn-primary:hover { background: #e0bd65; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,168,76,0.4); }
+    .btn-outline {
+      background: transparent; color: var(--white);
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+    .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 1.5rem; }
+    .section-inner { max-width: 960px; margin: 0 auto; }
+    .section-tag {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800; margin-bottom: 0.75rem; line-height: 1.2;
+    }
+    .section-sub {
+      font-size: 1rem; color: #4a5568; max-width: 620px;
+      line-height: 1.7; margin-bottom: 2.5rem;
+    }
+
+    /* ── SURVEY SECTION ── */
+    #encuesta { background: var(--white); }
+    .survey-form {
+      background: var(--sand);
+      border-radius: 1.2rem; padding: 2.5rem;
+      border: 1px solid rgba(13,115,119,0.12);
+      max-width: 640px;
+    }
+    .survey-form .question { margin-bottom: 1.75rem; }
+    .survey-form label {
+      display: block; font-weight: 600; font-size: 0.93rem;
+      margin-bottom: 0.6rem; color: var(--dark);
+    }
+    .survey-form input[type="text"],
+    .survey-form input[type="email"],
+    .survey-form textarea,
+    .survey-form select {
+      width: 100%; padding: 0.7rem 1rem;
+      border: 1.5px solid #d4d4d4; border-radius: 0.6rem;
+      font-size: 0.92rem; background: var(--white);
+      transition: border-color 0.2s; font-family: inherit;
+    }
+    .survey-form input:focus,
+    .survey-form textarea:focus,
+    .survey-form select:focus {
+      outline: none; border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(13,115,119,0.1);
+    }
+    .survey-form textarea { resize: vertical; min-height: 90px; }
+    .star-row { display: flex; gap: 0.4rem; font-size: 1.8rem; cursor: pointer; }
+    .star-row span { transition: transform 0.1s; }
+    .star-row span:hover { transform: scale(1.2); }
+    .survey-note {
+      font-size: 0.8rem; color: #6b7280; font-style: italic;
+      margin-top: 0.4rem;
+    }
+    .coupon-preview {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--jungle) 100%);
+      border-radius: 1rem; padding: 1.5rem 2rem;
+      color: var(--white); margin-top: 1.5rem;
+      display: flex; align-items: center; gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .coupon-icon { font-size: 2.8rem; }
+    .coupon-text h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .coupon-text p { font-size: 0.85rem; opacity: 0.85; line-height: 1.5; }
+    .coupon-code {
+      background: rgba(255,255,255,0.18); border: 1.5px dashed rgba(255,255,255,0.5);
+      border-radius: 0.5rem; padding: 0.4rem 1rem;
+      font-size: 1.1rem; font-weight: 800; letter-spacing: 0.1em;
+      margin-top: 0.5rem; display: inline-block;
+    }
+
+    /* ── REVIEWS SECTION ── */
+    #reviews { background: linear-gradient(180deg, var(--sand) 0%, #e8f5f0 100%); }
+    .review-platforms {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .platform-card {
+      background: var(--white); border-radius: 1.1rem;
+      padding: 1.75rem 1.5rem; text-align: center;
+      border: 1.5px solid transparent;
+      transition: all 0.25s; cursor: pointer;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .platform-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(13,115,119,0.15);
+      border-color: var(--teal2);
+    }
+    .platform-icon { font-size: 2.6rem; margin-bottom: 0.75rem; }
+    .platform-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .platform-card p { font-size: 0.83rem; color: #6b7280; line-height: 1.5; }
+    .platform-badge {
+      display: inline-block; margin-top: 0.75rem;
+      background: #f0fdf4; color: var(--jungle);
+      font-size: 0.75rem; font-weight: 700;
+      padding: 0.25rem 0.75rem; border-radius: 999px;
+      border: 1px solid #bbf7d0;
+    }
+    .review-notice {
+      margin-top: 2rem; padding: 1rem 1.5rem;
+      background: rgba(13,115,119,0.06); border-left: 3px solid var(--teal);
+      border-radius: 0 0.6rem 0.6rem 0; font-size: 0.85rem; color: #374151;
+    }
+
+    /* ── CONSERVATION SECTION ── */
+    #conservacion { background: var(--white); }
+    .conservation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .tier-card {
+      border-radius: 1.3rem; padding: 2rem 1.75rem;
+      border: 2px solid transparent;
+      transition: all 0.25s; position: relative; overflow: hidden;
+    }
+    .tier-card::before {
+      content: ''; position: absolute; inset: 0;
+      opacity: 0.07;
+      background: radial-gradient(circle at top right, #fff 0%, transparent 70%);
+    }
+    .tier-semilla {
+      background: linear-gradient(135deg, #0d7377 0%, #14a085 100%);
+      color: var(--white);
+    }
+    .tier-protector {
+      background: linear-gradient(135deg, #1a6b3c 0%, #228b4a 100%);
+      color: var(--white);
+    }
+    .tier-guardian {
+      background: linear-gradient(135deg, #0f2027 0%, #1a4a3a 100%);
+      color: var(--white);
+      border-color: var(--gold);
+    }
+    .tier-card .tier-icon { font-size: 2.4rem; margin-bottom: 0.75rem; }
+    .tier-card .tier-price {
+      font-size: 2.2rem; font-weight: 900; margin-bottom: 0.2rem;
+    }
+    .tier-guardian .tier-price { color: var(--gold); }
+    .tier-card .tier-name {
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; opacity: 0.75; margin-bottom: 1rem;
+    }
+    .tier-card ul {
+      list-style: none; font-size: 0.88rem; line-height: 1.9;
+      opacity: 0.9;
+    }
+    .tier-card ul li::before { content: '✓  '; opacity: 0.7; }
+    .tier-card .btn-tier {
+      margin-top: 1.5rem; width: 100%; text-align: center;
+      background: rgba(255,255,255,0.18);
+      color: var(--white); border: 1.5px solid rgba(255,255,255,0.35);
+      padding: 0.65rem 1rem; border-radius: 999px;
+      font-size: 0.88rem; font-weight: 700;
+      cursor: pointer; transition: all 0.2s; display: block;
+      text-decoration: none;
+    }
+    .tier-card .btn-tier:hover { background: rgba(255,255,255,0.28); }
+    .tier-guardian .btn-tier {
+      background: var(--gold); color: var(--dark); border-color: var(--gold);
+    }
+    .tier-guardian .btn-tier:hover { background: #e0bd65; }
+
+    /* ── SELVA GUARDIAN SECTION ── */
+    #selva-guardian {
+      background: linear-gradient(160deg, #0f2027 0%, #0d3b3e 50%, #1a3d2a 100%);
+      color: var(--white);
+    }
+    #selva-guardian .section-tag { color: var(--gold); }
+    #selva-guardian .section-title { color: var(--white); }
+    #selva-guardian .section-sub { color: rgba(255,255,255,0.7); }
+    .sg-tiers {
+      display: flex; flex-direction: column; gap: 0;
+      border: 1.5px solid rgba(201,168,76,0.25);
+      border-radius: 1.2rem; overflow: hidden;
+    }
+    .sg-tier {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.4rem 2rem;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      cursor: pointer; transition: background 0.2s;
+      background: rgba(255,255,255,0.03);
+    }
+    .sg-tier:last-child { border-bottom: none; }
+    .sg-tier:hover { background: rgba(201,168,76,0.07); }
+    .sg-tier.active { background: rgba(201,168,76,0.1); }
+    .sg-tier-icon { font-size: 1.8rem; flex-shrink: 0; width: 2.5rem; }
+    .sg-tier-info { flex: 1; }
+    .sg-tier-info h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.15rem; }
+    .sg-tier-info p { font-size: 0.83rem; color: rgba(255,255,255,0.6); }
+    .sg-tier-price {
+      font-size: 1.1rem; font-weight: 800; color: var(--gold);
+      white-space: nowrap;
+    }
+    .sg-tier-arrow { color: rgba(255,255,255,0.35); font-size: 1.1rem; transition: transform 0.2s; }
+    .sg-tier.active .sg-tier-arrow { transform: rotate(90deg); color: var(--gold); }
+    .sg-expand {
+      overflow: hidden; transition: max-height 0.35s ease, padding 0.25s;
+      max-height: 0; padding: 0 2rem; font-size: 0.88rem;
+      color: rgba(255,255,255,0.78); line-height: 1.8;
+      background: rgba(0,0,0,0.15);
+    }
+    .sg-expand.open { max-height: 500px; padding: 1.25rem 2rem; }
+    .sg-expand ul { list-style: none; }
+    .sg-expand ul li::before { content: '🌿  '; }
+    .sg-cta {
+      margin-top: 2.5rem; text-align: center;
+    }
+    .sg-cta p { font-size: 0.88rem; color: rgba(255,255,255,0.55); margin-top: 0.75rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark); color: rgba(255,255,255,0.55);
+      text-align: center; padding: 2.5rem 1.5rem;
+      font-size: 0.82rem; line-height: 1.8;
+    }
+    footer a { color: var(--teal2); text-decoration: none; }
+    footer strong { color: rgba(255,255,255,0.8); }
+
+    /* ── UTILITY ── */
+    .divider {
+      width: 48px; height: 4px; border-radius: 2px;
+      background: var(--teal); margin-bottom: 1.5rem;
+    }
+    #selva-guardian .divider { background: var(--gold); }
+    @media (max-width: 600px) {
+      nav { padding: 0.7rem 1rem; }
+      .nav-links { gap: 0.9rem; }
+      section { padding: 3.5rem 1rem; }
+      .survey-form { padding: 1.5rem; }
+      .sg-tier { padding: 1.1rem 1.25rem; }
+      .sg-expand.open { padding: 1rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useCallback } = React;
+
+    /* ── SURVEY ── */
+    function SurveySection() {
+      const [stars, setStars] = useState(0);
+      const [hovered, setHovered] = useState(0);
+      const [submitted, setSubmitted] = useState(false);
+      const [form, setForm] = useState({ nombre: '', email: '', actividad: '', comentario: '' });
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (stars === 0) { alert('Por favor selecciona una calificación.'); return; }
+        setSubmitted(true);
+      };
+
+      if (submitted) {
+        return (
+          <section id="encuesta">
+            <div className="section-inner">
+              <div className="survey-form" style={{textAlign:'center'}}>
+                <div style={{fontSize:'3.5rem', marginBottom:'1rem'}}>🎉</div>
+                <h3 style={{fontSize:'1.4rem', fontWeight:800, marginBottom:'0.5rem'}}>¡Gracias, {form.nombre || 'explorador'}!</h3>
+                <p style={{color:'#4a5568', marginBottom:'1.5rem'}}>Tu opinión nos ayuda a proteger y mejorar Cenotes Kin-Ha.</p>
+                <div className="coupon-preview">
+                  <div className="coupon-icon">🎟️</div>
+                  <div className="coupon-text">
+                    <h4>Cupón de agradecimiento</h4>
+                    <p>15% de descuento en tu próxima visita<br/>Válido 6 meses · No transferible</p>
+                    <div className="coupon-code">KINHA-GRACIAS</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      }
+
+      return (
+        <section id="encuesta">
+          <div className="section-inner">
+            <div className="section-tag">Paso 1</div>
+            <h2 className="section-title">¿Cómo fue tu experiencia?</h2>
+            <div className="divider"></div>
+            <p className="section-sub">
+              Cuéntanos sobre tu visita. Tu feedback directo nos ayuda a mejorar. Como agradecimiento recibirás un cupón para tu próxima visita.
+            </p>
+            <form className="survey-form" onSubmit={handleSubmit}>
+              <div className="question">
+                <label>Tu nombre</label>
+                <input type="text" placeholder="Nombre completo"
+                  value={form.nombre}
+                  onChange={e => setForm({...form, nombre: e.target.value})}
+                  required />
+              </div>
+              <div className="question">
+                <label>Correo electrónico</label>
+                <input type="email" placeholder="tu@correo.com"
+                  value={form.email}
+                  onChange={e => setForm({...form, email: e.target.value})}
+                  required />
+                <p className="survey-note">Solo para enviarte tu cupón de agradecimiento.</p>
+              </div>
+              <div className="question">
+                <label>Actividad principal</label>
+                <select value={form.actividad}
+                  onChange={e => setForm({...form, actividad: e.target.value})}
+                  required>
+                  <option value="">Selecciona...</option>
+                  <option>Nado en cenote</option>
+                  <option>Snorkel</option>
+                  <option>Tour guiado de senderos</option>
+                  <option>Rappel</option>
+                  <option>Zip-line</option>
+                  <option>Varios / Tour completo</option>
+                </select>
+              </div>
+              <div className="question">
+                <label>Calificación general</label>
+                <div className="star-row"
+                  onMouseLeave={() => setHovered(0)}>
+                  {[1,2,3,4,5].map(n => (
+                    <span key={n}
+                      onMouseEnter={() => setHovered(n)}
+                      onClick={() => setStars(n)}
+                      style={{color: n <= (hovered || stars) ? '#f59e0b' : '#d1d5db'}}>
+                      ★
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="question">
+                <label>Comentarios (opcional)</label>
+                <textarea placeholder="¿Qué fue lo que más te gustó? ¿Algo que podríamos mejorar?"
+                  value={form.comentario}
+                  onChange={e => setForm({...form, comentario: e.target.value})} />
+              </div>
+              <div className="coupon-preview" style={{marginBottom:'1.5rem'}}>
+                <div className="coupon-icon">🎟️</div>
+                <div className="coupon-text">
+                  <h4>Al completar recibirás</h4>
+                  <p>Un cupón de 15% de descuento en tu próxima visita como agradecimiento sincero por tu tiempo.</p>
+                </div>
+              </div>
+              <button type="submit" className="btn btn-primary" style={{width:'100%', justifyContent:'center'}}>
+                Enviar encuesta
+              </button>
+            </form>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── REVIEWS ── */
+    function ReviewsSection() {
+      const platforms = [
+        {
+          icon: '🌐',
+          name: 'Google',
+          desc: 'Deja tu reseña en Google Maps y ayuda a otros viajeros a descubrir Kin-Ha.',
+          badge: 'Google Maps',
+          href: 'https://g.page/r/cenotes-kinha/review',
+        },
+        {
+          icon: '✈️',
+          name: 'TripAdvisor',
+          desc: 'Comparte tu aventura en la comunidad de viajeros más grande del mundo.',
+          badge: 'TripAdvisor',
+          href: 'https://www.tripadvisor.com',
+        },
+        {
+          icon: '📸',
+          name: 'Instagram',
+          desc: 'Etiqueta tus fotos con #KinHaExperiences y @CenotesKinHa para inspirar a más exploradores.',
+          badge: '#KinHaExperiences',
+          href: 'https://www.instagram.com',
+        },
+      ];
+
+      return (
+        <section id="reviews">
+          <div className="section-inner">
+            <div className="section-tag">Paso 2</div>
+            <h2 className="section-title">Comparte tu aventura</h2>
+            <div className="divider"></div>
+            <p className="section-sub">
+              ¿Disfrutaste tu visita? Tu reseña auténtica inspira a otros viajeros y apoya a nuestro equipo. Solo te pedimos tu experiencia real — nada más.
+            </p>
+            <div className="review-platforms">
+              {platforms.map(p => (
+                <a key={p.name} className="platform-card" href={p.href} target="_blank" rel="noopener noreferrer">
+                  <div className="platform-icon">{p.icon}</div>
+                  <h3>{p.name}</h3>
+                  <p>{p.desc}</p>
+                  <span className="platform-badge">{p.badge}</span>
+                </a>
+              ))}
+            </div>
+            <div className="review-notice">
+              <strong>Nota importante:</strong> Te pedimos tu opinión genuina. No ofrecemos descuentos ni beneficios a cambio de reseñas — solo valoramos tu experiencia real.
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── CONSERVATION ── */
+    function ConservacionSection() {
+      const tiers = [
+        {
+          cls: 'tier-semilla',
+          icon: '🌱',
+          price: '$15',
+          name: 'Semilla Kin-Ha',
+          perks: [
+            'Plantación de 1 árbol nativo',
+            'Certificado digital de adopción',
+            'Coordenadas GPS de tu árbol',
+            'Actualización anual de crecimiento',
+          ],
+        },
+        {
+          cls: 'tier-protector',
+          icon: '🐢',
+          price: '$30',
+          name: 'Protector del Cenote',
+          perks: [
+            'Todo lo de Semilla Kin-Ha',
+            '1 mes de monitoreo de fauna',
+            'Reporte fotográfico mensual',
+            'Nombramiento en mapa del cenote',
+          ],
+        },
+        {
+          cls: 'tier-guardian',
+          icon: '🦋',
+          price: '$50',
+          name: 'Guardián Inicial',
+          perks: [
+            'Todo lo de Protector del Cenote',
+            'Acceso a galería privada de conservación',
+            'Membresía introductoria Selva Guardian',
+            'Llamada virtual con el equipo biólogo',
+          ],
+        },
+      ];
+
+      return (
+        <section id="conservacion">
+          <div className="section-inner">
+            <div className="section-tag">Paso 3</div>
+            <h2 className="section-title">Contribuye a la conservación</h2>
+            <div className="divider"></div>
+            <p className="section-sub">
+              Tu visita ya apoya el ecosistema. Con una contribución voluntaria, tu impacto se multiplica directamente en el campo — árboles plantados, fauna monitoreada, agua protegida.
+            </p>
+            <div className="conservation-grid">
+              {tiers.map(t => (
+                <div key={t.name} className={`tier-card ${t.cls}`}>
+                  <div className="tier-icon">{t.icon}</div>
+                  <div className="tier-price">{t.price} <span style={{fontSize:'1rem', opacity:0.7}}>USD</span></div>
+                  <div className="tier-name">{t.name}</div>
+                  <ul>
+                    {t.perks.map(p => <li key={p}>{p}</li>)}
+                  </ul>
+                  <a href="#selva-guardian" className="btn-tier">Contribuir ahora</a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── SELVA GUARDIAN ── */
+    function SelvaGuardianSection() {
+      const [open, setOpen] = useState(null);
+
+      const tiers = [
+        {
+          icon: '🌿',
+          name: 'Explorer',
+          price: '$99/año',
+          summary: 'Membresía de entrada para amantes de la naturaleza',
+          details: [
+            '1 visita anual con 20% de descuento',
+            'Reporte semestral de conservación',
+            'Acceso a newsletter exclusivo',
+            'Certificado digital de membresía',
+            'Comunidad privada de guardianes',
+          ],
+        },
+        {
+          icon: '🦜',
+          name: 'Naturalist',
+          price: '$250/año',
+          summary: 'Para quienes quieren un vínculo más profundo con el ecosistema',
+          details: [
+            'Todo lo de Explorer',
+            '2 visitas anuales gratuitas',
+            'Tour privado de senderos (1 persona)',
+            'Adopción de 3 árboles nativos',
+            'Reunión virtual trimestral con biólogos',
+            'Nombre en muro de guardianes',
+          ],
+        },
+        {
+          icon: '🐆',
+          name: 'Guardian',
+          price: '$500/año',
+          summary: 'Compromiso serio con la selva y el cenote',
+          details: [
+            'Todo lo de Naturalist',
+            '4 visitas anuales + 1 invitado gratis',
+            'Experiencia de campo con equipo de campo',
+            'Adopción de 10 árboles + parcela GPS',
+            'Reportes mensuales fotográficos',
+            'Logotipo en materiales de conservación',
+          ],
+        },
+        {
+          icon: '🌊',
+          name: 'Steward',
+          price: '$1,200/año',
+          summary: 'Protagonista activo de la conservación del cenote',
+          details: [
+            'Todo lo de Guardian',
+            'Visitas ilimitadas para 2 personas',
+            'Jornada anual de reforestación guiada',
+            'Patrocinio de 1 especie monitoreada',
+            'Acceso a datos de investigación en tiempo real',
+            'Reconocimiento en sitio web y señalética',
+          ],
+        },
+        {
+          icon: '🦅',
+          name: 'Patron',
+          price: '$3,000/año',
+          summary: 'Nivel patrocinador — tu nombre en la historia de Kin-Ha',
+          details: [
+            'Todo lo de Steward',
+            'Visitas VIP ilimitadas para familia',
+            'Evento privado anual en el cenote (hasta 10 personas)',
+            'Naming rights de una zona de conservación',
+            'Acceso a consejo consultivo de conservación',
+            'Reportes trimestrales de impacto con métricas',
+          ],
+        },
+        {
+          icon: '🏛️',
+          name: 'Legacy',
+          price: '$10,000+/año',
+          summary: 'Inversión fundacional — moldea el futuro del cenote',
+          details: [
+            'Todo lo de Patron',
+            'Co-diseño de proyectos de conservación',
+            'Acceso exclusivo a datos científicos no publicados',
+            'Reconocimiento permanente en instalaciones',
+            'Invitación a expediciones científicas anuales',
+            'Propuesta de proyectos especiales a medida',
+          ],
+        },
+      ];
+
+      const toggle = (i) => setOpen(open === i ? null : i);
+
+      return (
+        <section id="selva-guardian">
+          <div className="section-inner">
+            <div className="section-tag">Paso 4 — Membresía anual</div>
+            <h2 className="section-title">Programa Selva Guardian</h2>
+            <div className="divider"></div>
+            <p className="section-sub">
+              Un compromiso continuo con el ecosistema de la Península de Yucatán. Desde $99 hasta programas de legado para instituciones y familias fundadoras.
+            </p>
+            <div className="sg-tiers">
+              {tiers.map((t, i) => (
+                <React.Fragment key={t.name}>
+                  <div className={`sg-tier${open === i ? ' active' : ''}`} onClick={() => toggle(i)}>
+                    <div className="sg-tier-icon">{t.icon}</div>
+                    <div className="sg-tier-info">
+                      <h4>{t.name}</h4>
+                      <p>{t.summary}</p>
+                    </div>
+                    <div className="sg-tier-price">{t.price}</div>
+                    <div className="sg-tier-arrow">▶</div>
+                  </div>
+                  <div className={`sg-expand${open === i ? ' open' : ''}`}>
+                    <ul>
+                      {t.details.map(d => <li key={d}>{d}</li>)}
+                    </ul>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+            <div className="sg-cta">
+              <a href="mailto:guardian@kinhaexperiences.com" className="btn btn-primary" style={{fontSize:'1rem', padding:'0.9rem 2.5rem'}}>
+                Unirme a Selva Guardian
+              </a>
+              <p>guardian@kinhaexperiences.com · Respuesta en menos de 48 h</p>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── APP ── */
+    function App() {
+      return (
+        <>
+          <nav>
+            <div className="nav-logo">Kin-Ha <span>Experiences</span></div>
+            <div className="nav-links">
+              <a href="#encuesta">Encuesta</a>
+              <a href="#reviews">Reviews</a>
+              <a href="#conservacion">Conservación</a>
+              <a href="#selva-guardian">Guardian</a>
+            </div>
+          </nav>
+
+          <header className="hero">
+            <div className="hero-badge">Hub post-visita · Cenotes Kin-Ha</div>
+            <h1>Tu aventura en Kin-Ha<br/><em>apenas comienza</em></h1>
+            <p>
+              Gracias por explorar uno de los cenotes más puros de Yucatán.
+              Cuéntanos tu experiencia, inspira a otros viajeros y une tu historia
+              a la conservación del ecosistema.
+            </p>
+            <div className="hero-cta">
+              <a href="#encuesta" className="btn btn-primary">Compartir mi experiencia</a>
+              <a href="#selva-guardian" className="btn btn-outline">Ver Selva Guardian</a>
+            </div>
+          </header>
+
+          <SurveySection />
+          <ReviewsSection />
+          <ConservacionSection />
+          <SelvaGuardianSection />
+
+          <footer>
+            <strong>Cenotes Kin-Ha</strong> · Mérida, Yucatán, México<br />
+            <a href="mailto:hola@kinhaexperiences.com">hola@kinhaexperiences.com</a>
+            &nbsp;·&nbsp;
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">@CenotesKinHa</a>
+            <br/><br/>
+            © {new Date().getFullYear()} Kinha Experiences. Todos los derechos reservados.<br/>
+            <span style={{fontSize:'0.75rem', opacity:0.6}}>
+              Las contribuciones de conservación son donaciones voluntarias gestionadas directamente por el equipo Kin-Ha.
+            </span>
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
