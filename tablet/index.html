@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Kin-Ha — Encuesta de Visita / Visit Survey</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:   #0d7377;
+      --teal2:  #14a085;
+      --jungle: #1a6b3c;
+      --sand:   #f4ece1;
+      --dark:   #0f2027;
+      --gold:   #c9a84c;
+      --white:  #ffffff;
+    }
+    html, body { height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--dark); }
+    #root { height: 100%; }
+
+    /* ── LAYOUT ── */
+    .tablet-wrap {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(160deg, #0d3b3e 0%, #0d7377 55%, #1a6b3c 100%);
+    }
+
+    /* ── HEADER ── */
+    .tablet-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 1.5rem;
+      background: rgba(0,0,0,0.28);
+      flex-shrink: 0;
+    }
+    .tablet-logo { font-size: 1.1rem; font-weight: 800; color: var(--white); letter-spacing: 0.05em; }
+    .tablet-logo span { color: var(--gold); }
+
+    .lang-toggle {
+      display: flex; border-radius: 999px; overflow: hidden;
+      border: 1.5px solid rgba(255,255,255,0.3);
+    }
+    .lang-btn {
+      padding: 0.45rem 1.1rem; font-size: 0.88rem; font-weight: 700;
+      cursor: pointer; background: transparent;
+      color: rgba(255,255,255,0.55); border: none; transition: all 0.2s;
+    }
+    .lang-btn.active { background: var(--gold); color: var(--dark); }
+
+    /* ── PROGRESS ── */
+    .progress-bar { height: 4px; background: rgba(255,255,255,0.14); flex-shrink: 0; }
+    .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
+
+    /* ── CONTENT ── */
+    .tablet-content {
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* ── CARD ── */
+    .screen-card {
+      background: rgba(255,255,255,0.97);
+      border-radius: 1.5rem; padding: 2.5rem 2rem;
+      width: 100%; max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .step-tag {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 0.45rem;
+    }
+    .screen-title {
+      font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+      font-weight: 800; color: var(--dark); margin-bottom: 1.4rem; line-height: 1.2;
+    }
+
+    /* ── FOLIO INPUT ── */
+    .folio-input {
+      width: 100%; padding: 1.1rem 1.5rem;
+      font-size: 2.2rem; font-weight: 800; letter-spacing: 0.22em;
+      border: 2.5px solid #d4d4d4; border-radius: 0.8rem;
+      text-align: center; text-transform: uppercase;
+      background: var(--white); color: var(--dark);
+      transition: border-color 0.2s;
+      font-family: 'Courier New', monospace;
+    }
+    .folio-input:focus {
+      outline: none; border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(13,115,119,0.12);
+    }
+    .field-hint { font-size: 0.82rem; color: #6b7280; margin-top: 0.5rem; }
+
+    /* ── OPTION GRID ── */
+    .option-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .option-grid.g4 { grid-template-columns: repeat(2, 1fr); }
+
+    .option-btn {
+      padding: 1.15rem 0.9rem; border-radius: 0.8rem;
+      border: 2px solid #e5e7eb; background: var(--white);
+      cursor: pointer; transition: all 0.2s;
+      text-align: center; font-size: 0.93rem; font-weight: 600;
+      color: var(--dark); line-height: 1.3;
+    }
+    .opt-icon { font-size: 1.8rem; display: block; margin-bottom: 0.35rem; }
+    .option-btn:active { transform: scale(0.97); }
+    .option-btn:hover { border-color: var(--teal); background: rgba(13,115,119,0.04); }
+    .option-btn.sel {
+      border-color: var(--teal); background: rgba(13,115,119,0.09); color: var(--teal);
+    }
+
+    /* ── STARS ── */
+    .star-row {
+      display: flex; justify-content: center; gap: 0.4rem;
+      font-size: 3.8rem; cursor: pointer; margin: 0.75rem 0;
+      user-select: none;
+    }
+    .star-row span { transition: transform 0.1s; }
+    .star-row span:active { transform: scale(1.2); }
+    .star-label {
+      text-align: center; font-weight: 700; font-size: 1.05rem;
+      color: var(--teal); min-height: 1.5em;
+    }
+
+    /* ── TEXTAREA / INPUTS ── */
+    .tablet-textarea {
+      width: 100%; padding: 1rem 1.15rem;
+      border: 2px solid #e5e7eb; border-radius: 0.8rem;
+      font-size: 1rem; font-family: inherit;
+      resize: vertical; min-height: 130px;
+      transition: border-color 0.2s;
+    }
+    .tablet-textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(13,115,119,0.1); }
+
+    .tablet-input {
+      width: 100%; padding: 0.95rem 1.15rem;
+      border: 2px solid #e5e7eb; border-radius: 0.8rem;
+      font-size: 1rem; font-family: inherit;
+      transition: border-color 0.2s; margin-bottom: 0.75rem;
+      display: block;
+    }
+    .tablet-input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(13,115,119,0.1); }
+    .tablet-input.error { border-color: #dc2626; }
+    .err-msg { font-size: 0.82rem; color: #dc2626; margin-top: -0.5rem; margin-bottom: 0.6rem; }
+
+    .field-label { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.3rem; color: var(--dark); }
+
+    /* ── CONSENT ── */
+    .consent-label {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      cursor: pointer; font-size: 0.88rem; color: #4a5568; line-height: 1.55;
+      margin-top: 0.5rem;
+    }
+    .consent-label input[type="checkbox"] {
+      width: 1.3rem; height: 1.3rem; flex-shrink: 0; margin-top: 0.1rem;
+      accent-color: var(--teal); cursor: pointer;
+    }
+
+    /* ── SUB-INPUT ANIMATION ── */
+    .sub-input {
+      margin-top: 0.8rem;
+      animation: slideDown 0.22s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── COUPON ── */
+    .cupon-card {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--jungle) 100%);
+      border-radius: 1.2rem; padding: 1.75rem 1.5rem;
+      color: var(--white); text-align: center; margin: 1rem 0;
+    }
+    .cupon-code {
+      font-size: 2rem; font-weight: 900; letter-spacing: 0.15em;
+      background: rgba(255,255,255,0.18);
+      border: 2px dashed rgba(255,255,255,0.5);
+      border-radius: 0.6rem; padding: 0.5rem 1.5rem;
+      display: inline-block; margin: 0.6rem 0;
+      font-family: 'Courier New', monospace;
+    }
+    .cupon-detail { font-size: 0.85rem; opacity: 0.85; line-height: 1.6; }
+
+    /* ── OFFLINE BADGE ── */
+    .offline-badge {
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.35);
+      border-radius: 0.5rem; padding: 0.45rem 0.75rem;
+      font-size: 0.82rem; color: #92400e; margin-top: 0.75rem; text-align: center;
+    }
+
+    /* ── FOOTER NAV ── */
+    .tablet-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem; gap: 1rem;
+      background: rgba(0,0,0,0.22); flex-shrink: 0;
+    }
+    .btn-nav {
+      padding: 0.9rem 2rem; border-radius: 999px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      border: none; transition: all 0.2s; min-width: 130px; text-align: center;
+    }
+    .btn-back {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.2); }
+    .btn-next { background: var(--gold); color: var(--dark); }
+    .btn-next:hover { background: #e0bd65; transform: translateY(-1px); }
+    .btn-next:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    @media (max-width: 520px) {
+      .screen-card { padding: 1.75rem 1.25rem; }
+      .star-row { font-size: 3rem; }
+      .folio-input { font-size: 1.7rem; }
+      .cupon-code { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxFjLF4VCMYNWpMMvRNjjqLxxJGkH05gNPgY05zZBdkNSq2KN5NXJwEYMu5EoWrY-I3YA/exec';
+
+    /* ── i18n ── */
+    const T = {
+      es: {
+        logo: 'Kin-Ha', logoSpan: 'Experiences',
+        // Screen 0 – Folio
+        s0_tag: 'Bienvenido',
+        s0_title: 'Número de tu brazalete',
+        s0_hint: 'Escribe los 5–6 caracteres de tu pulsera (se convertirán a mayúsculas)',
+        s0_ph: 'Ej. 095B7',
+        s0_confirm: '¿Continuar sin ingresar el número de brazalete?',
+        // Screen 1 – Actividad
+        s1_tag: 'Tu experiencia · 1 de 3',
+        s1_title: '¿Qué actividad realizaste hoy?',
+        a_cenote: 'Nado en cenote', a_snorkel: 'Snorkel',
+        a_tour: 'Tour de senderos', a_rappel: 'Rappel',
+        a_zipline: 'Zip-line', a_completo: 'Tour completo',
+        // Screen 2 – Estrellas
+        s2_tag: 'Tu experiencia · 2 de 3',
+        s2_title: 'Calificación general',
+        s2_sub: 'Toca las estrellas para calificar',
+        stars: ['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'],
+        // Screen 3 – Comentarios
+        s3_tag: 'Tu experiencia · 3 de 3',
+        s3_title: '¿Qué fue lo mejor? (opcional)',
+        s3_ph: '¿Qué disfrutaste más? ¿Algo que podamos mejorar?',
+        // Screen A – Hospedaje
+        sA_tag: 'Sobre tu visita · A',
+        sA_title: '¿Dónde te estás hospedando?',
+        h_hotel: 'Hotel', h_airbnb: 'Airbnb / Renta vacacional',
+        h_familiares: 'Casa de familiares o amigos', h_local: 'Soy local / vivo aquí',
+        h_det_hotel: '¿En qué hotel o zona?', h_det_airbnb: '¿En qué zona o colonia?',
+        // Screen B – Canal
+        sB_tag: 'Sobre tu visita · B',
+        sB_title: '¿Cómo conociste Kin-Ha?',
+        c_web: 'Búsqueda en Google', c_ota: 'Plataforma OTA',
+        c_promotor: 'Promotor local', c_agencia: 'Agencia de viajes',
+        c_hotel: 'Concierge del hotel', c_referido: 'Me lo recomendaron',
+        c_redes: 'Redes sociales', c_conocido: 'Ya lo conocía',
+        c_det_ota: '¿Cuál plataforma? (Viator, GetYourGuide…)',
+        c_det_agencia: '¿Qué agencia?',
+        c_det_hotel: '¿Qué hotel te lo recomendó?',
+        // Screen C – Contacto
+        sC_tag: 'Tu cupón · C',
+        sC_title: 'Datos para tu cupón',
+        sC_sub: 'Recibe un 15% de descuento en tu próxima visita a Kin-Ha.',
+        l_nombre: 'Nombre completo', ph_nombre: 'Tu nombre',
+        l_email: 'Correo electrónico', ph_email: 'tu@correo.com',
+        l_tel: 'Teléfono (opcional)', ph_tel: '+52 55 0000 0000',
+        consent: 'Acepto recibir noticias y promociones de Cenotes Kin-Ha. Sin spam, solo lo que vale la pena. Puedes darte de baja cuando quieras.',
+        err_email: 'El correo es requerido para enviarte el cupón.',
+        // Screen D – Cupón
+        sD_tag: '¡Listo!',
+        sD_title: '¡Tu cupón está listo!',
+        sD_sub: 'Muestra este código en caja en tu próxima visita o al reservar en línea.',
+        coupon_valid: 'Válido 6 meses · No acumulable · No transferible',
+        sD_thanks: '¡Gracias por visitarnos!',
+        sD_thanks_sub: 'Tu opinión nos ayuda a proteger y mejorar este lugar.',
+        existing_coupon: 'Ya generaste un cupón para este brazalete hoy:',
+        offline_msg: 'Sin conexión — tus respuestas están guardadas y se enviarán automáticamente.',
+        // Nav
+        next: 'Siguiente →', back: '← Atrás',
+        finish: 'Nueva encuesta', send: 'Obtener cupón',
+      },
+      en: {
+        logo: 'Kin-Ha', logoSpan: 'Experiences',
+        // Screen 0 – Folio
+        s0_tag: 'Welcome',
+        s0_title: 'Your wristband number',
+        s0_hint: 'Enter the 5–6 characters on your wristband (auto-capitalized)',
+        s0_ph: 'E.g. 095B7',
+        s0_confirm: 'Continue without entering a wristband number?',
+        // Screen 1 – Activity
+        s1_tag: 'Your experience · 1 of 3',
+        s1_title: 'What activity did you do today?',
+        a_cenote: 'Cenote swimming', a_snorkel: 'Snorkeling',
+        a_tour: 'Trail tour', a_rappel: 'Rappelling',
+        a_zipline: 'Zip-line', a_completo: 'Full experience',
+        // Screen 2 – Stars
+        s2_tag: 'Your experience · 2 of 3',
+        s2_title: 'Overall rating',
+        s2_sub: 'Tap the stars to rate your visit',
+        stars: ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'],
+        // Screen 3 – Comments
+        s3_tag: 'Your experience · 3 of 3',
+        s3_title: 'What was the highlight? (optional)',
+        s3_ph: 'What did you enjoy most? Anything we could improve?',
+        // Screen A – Accommodation
+        sA_tag: 'Your visit · A',
+        sA_title: 'Where are you staying?',
+        h_hotel: 'Hotel', h_airbnb: 'Airbnb / Vacation rental',
+        h_familiares: "Friends or family's place", h_local: "I'm a local",
+        h_det_hotel: 'Which hotel or area?', h_det_airbnb: 'Which area or neighborhood?',
+        // Screen B – Channel
+        sB_tag: 'Your visit · B',
+        sB_title: 'How did you discover Kin-Ha?',
+        c_web: 'Google search', c_ota: 'Booking platform (OTA)',
+        c_promotor: 'Local promoter', c_agencia: 'Travel agency',
+        c_hotel: 'Hotel concierge', c_referido: 'Word of mouth',
+        c_redes: 'Social media', c_conocido: 'Already knew about it',
+        c_det_ota: 'Which platform? (Viator, GetYourGuide…)',
+        c_det_agencia: 'Which agency?',
+        c_det_hotel: 'Which hotel recommended it?',
+        // Screen C – Contact
+        sC_tag: 'Your coupon · C',
+        sC_title: 'Claim your discount coupon',
+        sC_sub: 'Get 15% off your next visit to Kin-Ha.',
+        l_nombre: 'Full name', ph_nombre: 'Your name',
+        l_email: 'Email address', ph_email: 'you@email.com',
+        l_tel: 'Phone (optional)', ph_tel: '+1 555 000 0000',
+        consent: 'I agree to receive news and promotions from Cenotes Kin-Ha. No spam, only the good stuff. Unsubscribe anytime.',
+        err_email: 'Email is required to send you the coupon.',
+        // Screen D – Coupon
+        sD_tag: 'Done!',
+        sD_title: 'Your coupon is ready!',
+        sD_sub: 'Show this code at the ticket booth on your next visit or when booking online.',
+        coupon_valid: 'Valid 6 months · Not stackable · Non-transferable',
+        sD_thanks: 'Thank you for visiting!',
+        sD_thanks_sub: 'Your feedback helps us protect and improve this special place.',
+        existing_coupon: 'A coupon was already generated for this wristband today:',
+        offline_msg: 'No connection — your answers are saved and will be sent automatically.',
+        // Nav
+        next: 'Next →', back: '← Back',
+        finish: 'New survey', send: 'Get coupon',
+      },
+    };
+
+    /* ── UTILS ── */
+    const SCREENS = ['folio','actividad','estrellas','comentarios','hospedaje','canal','contacto','cupon'];
+    const TOTAL = SCREENS.length;
+
+    function genCupon() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let s = '';
+      for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
+      return `KINHA15-${s}`;
+    }
+
+    function dayKey() { return new Date().toISOString().slice(0, 10); }
+
+    function getCuponGuardado(folio) {
+      if (!folio) return null;
+      const store = JSON.parse(localStorage.getItem('kinha_cupones_v1') || '{}');
+      return store[`${folio.toUpperCase()}_${dayKey()}`] || null;
+    }
+
+    function guardarCupon(folio, code) {
+      const store = JSON.parse(localStorage.getItem('kinha_cupones_v1') || '{}');
+      store[`${folio.toUpperCase()}_${dayKey()}`] = code;
+      localStorage.setItem('kinha_cupones_v1', JSON.stringify(store));
+    }
+
+    async function enviarSurvey(payload) {
+      try {
+        await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        return true;
+      } catch {
+        const pending = JSON.parse(localStorage.getItem('surveys_pendientes') || '[]');
+        pending.push({ ...payload, _guardado: new Date().toISOString() });
+        localStorage.setItem('surveys_pendientes', JSON.stringify(pending));
+        return false;
+      }
+    }
+
+    async function reintentarPendientes() {
+      const pending = JSON.parse(localStorage.getItem('surveys_pendientes') || '[]');
+      if (!pending.length) return;
+      const fallidos = [];
+      for (const p of pending) {
+        try {
+          await fetch(WEBHOOK_URL, {
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(p),
+          });
+        } catch {
+          fallidos.push(p);
+        }
+      }
+      localStorage.setItem('surveys_pendientes', JSON.stringify(fallidos));
+    }
+
+    /* ── APP ── */
+    function TabletSurvey() {
+      const [lang, setLang]     = useState('es');
+      const [step, setStep]     = useState(0);
+      const [sending, setSend]  = useState(false);
+      const [offline, setOffline] = useState(false);
+
+      /* survey data */
+      const [folio, setFolio]               = useState('');
+      const [actividad, setActividad]       = useState('');
+      const [estrellas, setEstrellas]       = useState(0);
+      const [hovered, setHovered]           = useState(0);
+      const [comentario, setComentario]     = useState('');
+      const [hospedaje, setHospedaje]       = useState('');
+      const [hospDet, setHospDet]           = useState('');
+      const [canal, setCanal]               = useState('');
+      const [canalDet, setCanalDet]         = useState('');
+      const [nombre, setNombre]             = useState('');
+      const [email, setEmail]               = useState('');
+      const [telefono, setTelefono]         = useState('');
+      const [consent, setConsent]           = useState(false);
+      const [cupon, setCupon]               = useState('');
+      const [emailErr, setEmailErr]         = useState('');
+
+      const t    = T[lang];
+      const key  = SCREENS[step];
+      const pct  = (step / (TOTAL - 1)) * 100;
+
+      /* retry pending on mount */
+      useEffect(() => { reintentarPendientes(); }, []);
+
+      /* check duplicate coupon when reaching contacto */
+      useEffect(() => {
+        if (key === 'contacto' && folio.trim()) {
+          const prev = getCuponGuardado(folio.trim());
+          if (prev) { setCupon(prev); setStep(SCREENS.indexOf('cupon')); }
+        }
+      }, [step]);
+
+      const canAdvance = () => {
+        if (key === 'actividad') return actividad !== '';
+        if (key === 'estrellas') return estrellas > 0;
+        if (key === 'hospedaje') return hospedaje !== '';
+        if (key === 'canal')     return canal !== '';
+        return true;
+      };
+
+      const siguiente = async () => {
+        /* soft validation: folio vacío */
+        if (key === 'folio' && !folio.trim()) {
+          if (!window.confirm(t.s0_confirm)) return;
+        }
+
+        /* contacto: validate + generate coupon + send */
+        if (key === 'contacto') {
+          if (!email.trim()) { setEmailErr(t.err_email); return; }
+          setEmailErr('');
+          const folioKey = folio.trim().toUpperCase() || 'ANON';
+          let code = getCuponGuardado(folioKey);
+          if (!code) { code = genCupon(); guardarCupon(folioKey, code); }
+          setCupon(code);
+          const payload = {
+            folio_brazalete: folioKey,
+            idioma: lang,
+            nombre,
+            email,
+            telefono,
+            consent_marketing: consent,
+            tipo_hospedaje: hospedaje,
+            hospedaje_detalle: hospDet,
+            es_local: hospedaje === 'local',
+            canal_llegada: canal,
+            canal_detalle: canalDet,
+            cupon_codigo: code,
+            respuestas_experiencia: { actividad, estrellas, comentario },
+            timestamp: new Date().toISOString(),
+          };
+          setSend(true);
+          const ok = await enviarSurvey(payload);
+          setSend(false);
+          if (!ok) setOffline(true);
+        }
+
+        setStep(s => Math.min(s + 1, TOTAL - 1));
+      };
+
+      const atras = () => { setStep(s => Math.max(s - 1, 0)); setEmailErr(''); };
+
+      const reset = () => {
+        setFolio(''); setActividad(''); setEstrellas(0); setComentario('');
+        setHospedaje(''); setHospDet(''); setCanal(''); setCanalDet('');
+        setNombre(''); setEmail(''); setTelefono(''); setConsent(false);
+        setCupon(''); setOffline(false); setEmailErr(''); setStep(0);
+      };
+
+      return (
+        <div className="tablet-wrap">
+          {/* Header */}
+          <div className="tablet-header">
+            <div className="tablet-logo">{t.logo} <span>{t.logoSpan}</span></div>
+            <div className="lang-toggle">
+              <button className={`lang-btn${lang==='es'?' active':''}`} onClick={()=>setLang('es')}>ES</button>
+              <button className={`lang-btn${lang==='en'?' active':''}`} onClick={()=>setLang('en')}>EN</button>
+            </div>
+          </div>
+
+          {/* Progress */}
+          <div className="progress-bar">
+            <div className="progress-fill" style={{width:`${pct}%`}} />
+          </div>
+
+          {/* Screens */}
+          <div className="tablet-content">
+            {key === 'folio' && (
+              <div className="screen-card">
+                <div className="step-tag">{t.s0_tag}</div>
+                <h1 className="screen-title">{t.s0_title}</h1>
+                <input
+                  className="folio-input"
+                  type="text"
+                  maxLength={6}
+                  placeholder={t.s0_ph}
+                  value={folio}
+                  autoFocus
+                  autoComplete="off"
+                  onChange={e => setFolio(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
+                />
+                <p className="field-hint">{t.s0_hint}</p>
+              </div>
+            )}
+
+            {key === 'actividad' && (
+              <div className="screen-card">
+                <div className="step-tag">{t.s1_tag}</div>
+                <h1 className="screen-title">{t.s1_title}</h1>
+                <div className="option-grid">
+                  {[
+                    {k:'cenote', icon:'🌊', l:t.a_cenote},
+                    {k:'snorkel',icon:'🤿', l:t.a_snorkel},
+                    {k:'tour',   icon:'🌿', l:t.a_tour},
+                    {k:'rappel', icon:'🧗', l:t.a_rappel},
+                    {k:'zipline',icon:'🪂', l:t.a_zipline},
+                    {k:'completo',icon:'⭐',l:t.a_completo},
+                  ].map(o => (
+                    <button
+                      key={o.k}
+                      className={`option-btn${actividad===o.k?' sel':''}`}
+                      onClick={() => setActividad(o.k)}
+                    >
+                      <span className="opt-icon">{o.icon}</span>{o.l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {key === 'estrellas' && (
+              <div className="screen-card" style={{textAlign:'center'}}>
+                <div className="step-tag">{t.s2_tag}</div>
+                <h1 className="screen-title">{t.s2_title}</h1>
+                <p style={{color:'#6b7280',marginBottom:'0.25rem',fontSize:'0.93rem'}}>{t.s2_sub}</p>
+                <div className="star-row" onMouseLeave={() => setHovered(0)}>
+                  {[1,2,3,4,5].map(n => (
+                    <span
+                      key={n}
+                      onMouseEnter={() => setHovered(n)}
+                      onClick={() => setEstrellas(n)}
+                      style={{color: n <= (hovered||estrellas) ? '#f59e0b' : '#d1d5db'}}
+                    >★</span>
+                  ))}
+                </div>
+                <div className="star-label">
+                  {(hovered||estrellas) > 0 ? t.stars[hovered||estrellas] : ''}
+                </div>
+              </div>
+            )}
+
+            {key === 'comentarios' && (
+              <div className="screen-card">
+                <div className="step-tag">{t.s3_tag}</div>
+                <h1 className="screen-title">{t.s3_title}</h1>
+                <textarea
+                  className="tablet-textarea"
+                  placeholder={t.s3_ph}
+                  value={comentario}
+                  autoFocus
+                  onChange={e => setComentario(e.target.value)}
+                />
+              </div>
+            )}
+
+            {key === 'hospedaje' && (
+              <div className="screen-card">
+                <div className="step-tag">{t.sA_tag}</div>
+                <h1 className="screen-title">{t.sA_title}</h1>
+                <div className="option-grid g4">
+                  {[
+                    {k:'hotel',      icon:'🏨', l:t.h_hotel},
+                    {k:'airbnb',     icon:'🏠', l:t.h_airbnb},
+                    {k:'familiares', icon:'👨‍👩‍👧', l:t.h_familiares},
+                    {k:'local',      icon:'🌴', l:t.h_local},
+                  ].map(o => (
+                    <button
+                      key={o.k}
+                      className={`option-btn${hospedaje===o.k?' sel':''}`}
+                      onClick={() => { setHospedaje(o.k); setHospDet(''); }}
+                    >
+                      <span className="opt-icon">{o.icon}</span>{o.l}
+                    </button>
+                  ))}
+                </div>
+                {(hospedaje==='hotel'||hospedaje==='airbnb') && (
+                  <div className="sub-input">
+                    <input
+                      className="tablet-input"
+                      type="text"
+                      placeholder={hospedaje==='hotel' ? t.h_det_hotel : t.h_det_airbnb}
+                      value={hospDet}
+                      autoFocus
+                      onChange={e => setHospDet(e.target.value)}
+                      style={{marginBottom:0}}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {key === 'canal' && (
+              <div className="screen-card">
+                <div className="step-tag">{t.sB_tag}</div>
+                <h1 className="screen-title">{t.sB_title}</h1>
+                <div className="option-grid">
+                  {[
+                    {k:'web',      icon:'🔍', l:t.c_web},
+                    {k:'ota',      icon:'📱', l:t.c_ota},
+                    {k:'promotor', icon:'🗣️', l:t.c_promotor},
+                    {k:'agencia',  icon:'✈️', l:t.c_agencia},
+                    {k:'hotel',    icon:'🏨', l:t.c_hotel},
+                    {k:'referido', icon:'👥', l:t.c_referido},
+                    {k:'redes',    icon:'📸', l:t.c_redes},
+                    {k:'conocido', icon:'⭐', l:t.c_conocido},
+                  ].map(o => (
+                    <button
+                      key={o.k}
+                      className={`option-btn${canal===o.k?' sel':''}`}
+                      onClick={() => { setCanal(o.k); setCanalDet(''); }}
+                    >
+                      <span className="opt-icon">{o.icon}</span>{o.l}
+                    </button>
+                  ))}
+                </div>
+                {['ota','agencia','hotel'].includes(canal) && (
+                  <div className="sub-input">
+                    <input
+                      className="tablet-input"
+                      type="text"
+                      placeholder={canal==='ota' ? t.c_det_ota : canal==='agencia' ? t.c_det_agencia : t.c_det_hotel}
+                      value={canalDet}
+                      autoFocus
+                      onChange={e => setCanalDet(e.target.value)}
+                      style={{marginBottom:0}}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {key === 'contacto' && (
+              <div className="screen-card">
+                <div className="step-tag">{t.sC_tag}</div>
+                <h1 className="screen-title">{t.sC_title}</h1>
+                <p style={{color:'#4a5568',marginBottom:'1.25rem',fontSize:'0.95rem'}}>{t.sC_sub}</p>
+                <label className="field-label">{t.l_nombre}</label>
+                <input
+                  className="tablet-input"
+                  type="text"
+                  placeholder={t.ph_nombre}
+                  value={nombre}
+                  onChange={e => setNombre(e.target.value)}
+                />
+                <label className="field-label">{t.l_email}</label>
+                <input
+                  className={`tablet-input${emailErr?' error':''}`}
+                  type="email"
+                  placeholder={t.ph_email}
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                {emailErr && <p className="err-msg">{emailErr}</p>}
+                <label className="field-label">{t.l_tel}</label>
+                <input
+                  className="tablet-input"
+                  type="tel"
+                  placeholder={t.ph_tel}
+                  value={telefono}
+                  onChange={e => setTelefono(e.target.value)}
+                  style={{marginBottom:'0.5rem'}}
+                />
+                <label className="consent-label">
+                  <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} />
+                  <span>{t.consent}</span>
+                </label>
+              </div>
+            )}
+
+            {key === 'cupon' && (
+              <div className="screen-card" style={{textAlign:'center'}}>
+                <div className="step-tag">{t.sD_tag}</div>
+                <div style={{fontSize:'4.5rem',marginBottom:'0.5rem'}}>🎉</div>
+                <h1 className="screen-title">{t.sD_title}</h1>
+                <p style={{color:'#4a5568',marginBottom:'0.75rem',fontSize:'0.95rem'}}>{t.sD_sub}</p>
+                <div className="cupon-card">
+                  <div style={{fontSize:'0.9rem',opacity:0.8,marginBottom:'0.2rem'}}>🎟️ 15% OFF</div>
+                  <div className="cupon-code">{cupon}</div>
+                  <p className="cupon-detail">{t.coupon_valid}</p>
+                </div>
+                {offline && <div className="offline-badge">📶 {t.offline_msg}</div>}
+                <p style={{marginTop:'1.5rem',fontWeight:700,fontSize:'1rem',color:' var(--dark)'}}>{t.sD_thanks}</p>
+                <p style={{color:'#6b7280',fontSize:'0.88rem',marginTop:'0.3rem'}}>{t.sD_thanks_sub}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Footer nav */}
+          <div className="tablet-footer">
+            {key !== 'cupon' ? (
+              <>
+                {step > 0
+                  ? <button className="btn-nav btn-back" onClick={atras}>{t.back}</button>
+                  : <div />
+                }
+                <button
+                  className="btn-nav btn-next"
+                  onClick={siguiente}
+                  disabled={!canAdvance() || sending}
+                >
+                  {sending ? '…' : key === 'contacto' ? t.send : t.next}
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn-nav btn-next"
+                onClick={reset}
+                style={{margin:'0 auto',padding:'0.9rem 3rem',fontSize:'1.05rem'}}
+              >
+                {t.finish}
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<TabletSurvey />);
+  </script>
+</body>
+</html>
