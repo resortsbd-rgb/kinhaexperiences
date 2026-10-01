@@ -148,6 +148,8 @@
     .contact-inner { display: flex; justify-content: space-between; align-items: center; gap: 2rem; }
     .contact-inner h2 { max-width: 650px; margin: 0; font-size: clamp(2.2rem, 4.5vw, 4rem); }
     .contact-strip .button { background: white; color: var(--forest); white-space: nowrap; }
+    .contact-actions { display: flex; justify-content: flex-end; gap: .75rem; flex-wrap: wrap; }
+    .contact-strip .button.alt { color: white; background: transparent; border: 1px solid rgba(255,255,255,.7); }
 
     footer { padding-block: 3.5rem; color: rgba(255,255,255,.64); background: #091d19; font-size: .78rem; }
     .footer-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; }
@@ -187,7 +189,8 @@
       .experience-visual img:last-child { height: 300px; margin-top: 34px; }
       .coupon { grid-template-columns: 1fr; }
       .contact-inner { display: block; }
-      .contact-inner .button { margin-top: 1.5rem; }
+      .contact-actions { margin-top: 1.5rem; justify-content: stretch; }
+      .contact-actions .button { flex: 1 1 180px; }
       .footer-grid { grid-template-columns: 1fr; }
       .footer-meta { text-align: left; }
       .legal { margin-left: 0; }
@@ -338,7 +341,10 @@
     <section class="contact-strip">
       <div class="wrap contact-inner">
         <h2>¿Quieres conocer una iniciativa o proponer una alianza?</h2>
-        <a class="button" href="mailto:luis@kinhaexperience.com?subject=Kin-Ha%20Experience%20-%20Conservaci%C3%B3n">Escribir a Luis</a>
+        <div class="contact-actions" aria-label="Opciones para contactar a Luis">
+          <a class="button" href="https://wa.me/529982053527?text=Hola%20Luis%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20Kin-Ha%20Experience%20y%20sus%20iniciativas%20de%20conservaci%C3%B3n." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a class="button alt" href="mailto:luis@kinhaexperience.com?subject=Kin-Ha%20Experience%20-%20Conservaci%C3%B3n">Correo</a>
+        </div>
       </div>
     </section>
   </main>
