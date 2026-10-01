@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kin-Ha Experience | Jungle, cenotes and conservation in Puerto Morelos</title>
+  <meta name="description" content="Discover the story of Cenotes Kin-Ha and learn how to voluntarily support responsible conservation initiatives along the Route of the Cenotes in Puerto Morelos.">
+  <meta name="theme-color" content="#173c32">
+  <link rel="canonical" href="https://kinhaexperience.com/en/">
+  <link rel="alternate" hreflang="es" href="https://kinhaexperience.com/en/">
+  <link rel="alternate" hreflang="en" href="https://kinhaexperience.com/en/">
+  <link rel="alternate" hreflang="fr" href="https://kinhaexperience.com/fr/">
+  <link rel="alternate" hreflang="x-default" href="https://kinhaexperience.com/en/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest: #173c32;
+      --forest-deep: #0d2822;
+      --moss: #47735b;
+      --water: #2d7f82;
+      --sun: #d5b878;
+      --sand: #f4f0e7;
+      --paper: #fbfaf6;
+      --ink: #1d2924;
+      --muted: #68746f;
+      --line: rgba(23, 60, 50, .16);
+      --radius: 26px;
+      --shadow: 0 24px 80px rgba(13, 40, 34, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Manrope", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; width: 100%; }
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .skip-link { position: fixed; left: 1rem; top: -5rem; z-index: 999; background: white; padding: .7rem 1rem; border-radius: 99px; }
+    .skip-link:focus { top: 1rem; }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
+    .eyebrow { margin: 0 0 .9rem; color: var(--sun); font-size: .73rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .eyebrow.dark { color: var(--moss); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; line-height: .98; }
+    h1 { max-width: 880px; margin-bottom: 1.25rem; font-size: clamp(3.6rem, 8.6vw, 7.4rem); letter-spacing: -.045em; }
+    h2 { max-width: 760px; margin-bottom: 1.25rem; font-size: clamp(2.6rem, 5vw, 4.8rem); letter-spacing: -.035em; }
+    h3 { margin-bottom: .6rem; font-size: 1.8rem; }
+    .lead { max-width: 670px; font-size: clamp(1.05rem, 1.7vw, 1.24rem); color: rgba(255, 255, 255, .82); }
+    .lede-dark { max-width: 700px; color: var(--muted); font-size: 1.08rem; }
+    .button-row { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 50px;
+      padding: .78rem 1.3rem; border: 1px solid transparent; border-radius: 999px;
+      font-size: .86rem; font-weight: 700; text-decoration: none; transition: .25s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button.primary { background: var(--sun); color: var(--forest-deep); box-shadow: 0 12px 30px rgba(0, 0, 0, .18); }
+    .button.primary:hover { background: #e2c98d; }
+    .button.ghost { border-color: rgba(255, 255, 255, .42); color: white; background: rgba(255, 255, 255, .07); }
+    .button.ghost:hover { background: rgba(255, 255, 255, .14); }
+    .button.dark { background: var(--forest); color: white; }
+
+    nav {
+      position: fixed; inset: 0 0 auto; z-index: 50; color: white;
+      background: linear-gradient(to bottom, rgba(8, 29, 24, .78), transparent);
+    }
+    .nav-inner { height: 84px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { display: inline-flex; align-items: baseline; gap: .4rem; text-decoration: none; }
+    .brand strong { font-family: "Newsreader", Georgia, serif; font-size: 1.55rem; font-weight: 600; letter-spacing: -.02em; }
+    .brand span { color: var(--sun); font-size: .67rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 1.4rem; }
+    .nav-links a { font-size: .82rem; font-weight: 600; text-decoration: none; }
+    .nav-links a:not(.nav-cta) { opacity: .84; }
+    .nav-links a:hover { opacity: 1; }
+    .nav-cta { padding: .58rem .95rem; border: 1px solid rgba(255,255,255,.42); border-radius: 99px; }
+    .lang-switcher { display: inline-flex; align-items: center; padding: .18rem; border: 1px solid rgba(255,255,255,.34); border-radius: 999px; background: rgba(8,29,24,.24); backdrop-filter: blur(8px); }
+    .lang-switcher a { min-width: 32px; padding: .28rem .42rem; border-radius: 999px; text-align: center; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-decoration: none; opacity: .72; }
+    .lang-switcher a:hover { opacity: 1; }
+    .lang-switcher a.active { color: var(--forest-deep); background: white; opacity: 1; }
+
+    .hero {
+      min-height: 92svh; display: flex; align-items: flex-end; position: relative; isolation: isolate;
+      color: white; background: var(--forest-deep) url("/assets/kinha-cenote-hero.webp") center 45% / cover no-repeat;
+    }
+    .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(7,26,22,.93) 0%, rgba(8,31,26,.72) 45%, rgba(8,30,25,.18) 78%), linear-gradient(to top, rgba(7,24,20,.68), transparent 55%); }
+    .hero-content { padding-block: 11rem 5.5rem; }
+    .hero .lead { margin-bottom: 0; }
+    .hero-note { margin-top: 3.2rem; display: flex; flex-wrap: wrap; gap: 1.4rem; color: rgba(255,255,255,.7); font-size: .76rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+    .hero-note span { display: inline-flex; align-items: center; gap: .55rem; }
+    .hero-note span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sun); }
+
+    section { padding-block: clamp(5rem, 9vw, 9rem); }
+    .story { background: var(--paper); }
+    .story-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, .76fr); gap: clamp(3rem, 8vw, 8rem); align-items: center; }
+    .story-copy p:not(.eyebrow) { max-width: 650px; color: var(--muted); }
+    .story-copy .signature { margin-top: 2rem; color: var(--forest); font-family: "Newsreader", Georgia, serif; font-size: 1.55rem; }
+    .story-photo { position: relative; }
+    .story-photo img { aspect-ratio: 4 / 5; object-fit: cover; border-radius: 180px 180px 28px 28px; box-shadow: var(--shadow); }
+    .story-photo figcaption { max-width: 250px; margin: 1rem 0 0 auto; color: var(--muted); font-size: .77rem; }
+
+    .manifesto { padding-block: 0; background: var(--paper); }
+    .manifesto-card { min-height: 580px; display: flex; align-items: flex-end; position: relative; overflow: hidden; isolation: isolate; border-radius: var(--radius); color: white; background: var(--forest) url("/assets/kinha-blanca-flor.webp") center / cover no-repeat; box-shadow: var(--shadow); }
+    .manifesto-card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(6,29,24,.94), rgba(7,27,23,.12) 70%); }
+    .manifesto-copy { max-width: 760px; padding: clamp(2rem, 6vw, 5rem); }
+    .manifesto-copy h2 { margin-bottom: 1rem; }
+    .manifesto-copy p:last-child { max-width: 620px; margin-bottom: 0; color: rgba(255,255,255,.78); }
+
+    .principles { background: var(--sand); }
+    .principles-head { display: flex; justify-content: space-between; gap: 2rem; align-items: end; margin-bottom: 3rem; }
+    .principles-head h2 { margin-bottom: 0; }
+    .principles-head p { max-width: 430px; margin-bottom: .5rem; color: var(--muted); }
+    .principle-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
+    .principle { padding: 2rem 1.4rem 0 0; border-right: 1px solid var(--line); }
+    .principle + .principle { padding-left: 1.4rem; }
+    .principle:last-child { border-right: 0; }
+    .number { color: var(--water); font-size: .73rem; font-weight: 700; letter-spacing: .15em; }
+    .principle h3 { margin-top: 1.7rem; font-size: 1.7rem; }
+    .principle p { margin-bottom: 0; color: var(--muted); font-size: .9rem; }
+
+    .contribute { background: var(--forest-deep); color: white; }
+    .contribute-head { max-width: 780px; margin-bottom: 3.2rem; }
+    .contribute-head p:last-child { color: rgba(255,255,255,.68); }
+    .support-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .support-card { display: flex; flex-direction: column; min-height: 390px; padding: 2rem; border: 1px solid rgba(255,255,255,.16); border-radius: 22px; background: rgba(255,255,255,.055); }
+    .support-card.featured { border-color: rgba(213,184,120,.75); background: linear-gradient(145deg, rgba(213,184,120,.15), rgba(255,255,255,.055)); }
+    .support-kicker { color: var(--sun); font-size: .69rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    .support-price { margin: 1.5rem 0 .15rem; font-family: "Newsreader", Georgia, serif; font-size: 3.2rem; line-height: 1; }
+    .support-price small { font-family: "Manrope", sans-serif; font-size: .78rem; color: rgba(255,255,255,.56); }
+    .support-card h3 { margin: .6rem 0 1rem; color: white; font-size: 1.8rem; }
+    .support-card p { color: rgba(255,255,255,.66); font-size: .9rem; }
+    .support-card .button { margin-top: auto; }
+    .trust-note { margin-top: 2rem; padding: 1.25rem 1.4rem; border-left: 2px solid var(--sun); color: rgba(255,255,255,.72); background: rgba(0,0,0,.16); font-size: .84rem; }
+    .trust-note strong { color: white; }
+
+    .experience { background: var(--paper); }
+    .experience-grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: clamp(3rem, 7vw, 7rem); align-items: center; }
+    .experience-visual { display: grid; grid-template-columns: 1.15fr .85fr; gap: .8rem; }
+    .experience-visual img { height: 520px; object-fit: cover; border-radius: 22px; }
+    .experience-visual img:last-child { height: 400px; margin-top: 70px; }
+    .experience-copy p:not(.eyebrow) { color: var(--muted); }
+    .coupon { margin: 2rem 0; padding: 1.25rem; display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; border: 1px solid var(--line); border-radius: 18px; background: var(--sand); }
+    .coupon strong { display: block; color: var(--forest); font-size: 1.05rem; }
+    .coupon p { margin: .25rem 0 0; font-size: .78rem; }
+    .coupon-code { padding: .55rem .8rem; border: 1px dashed var(--moss); border-radius: 10px; color: var(--forest); font-size: .78rem; font-weight: 800; letter-spacing: .08em; }
+
+    .contact-strip { padding-block: 4rem; color: white; background: var(--water); }
+    .contact-inner { display: flex; justify-content: space-between; align-items: center; gap: 2rem; }
+    .contact-inner h2 { max-width: 650px; margin: 0; font-size: clamp(2.2rem, 4.5vw, 4rem); }
+    .contact-strip .button { background: white; color: var(--forest); white-space: nowrap; }
+    .contact-actions { display: flex; justify-content: flex-end; gap: .75rem; flex-wrap: wrap; }
+    .contact-strip .button.alt { color: white; background: transparent; border: 1px solid rgba(255,255,255,.7); }
+
+    footer { padding-block: 3.5rem; color: rgba(255,255,255,.64); background: #091d19; font-size: .78rem; }
+    .footer-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; }
+    .footer-brand { color: white; font-family: "Newsreader", Georgia, serif; font-size: 1.8rem; }
+    .footer-meta { text-align: right; }
+    .footer-meta a { color: white; }
+    .legal { max-width: 760px; margin: 1.5rem 0 0 auto; color: rgba(255,255,255,.46); }
+
+    @media (max-width: 900px) {
+      .nav-links > a:not(.nav-cta) { display: none; }
+      .nav-links { gap: .7rem; }
+      .story-grid, .experience-grid { grid-template-columns: 1fr; }
+      .story-photo { max-width: 560px; }
+      .principles-head { display: block; }
+      .principle-grid { grid-template-columns: 1fr 1fr; row-gap: 2rem; }
+      .principle:nth-child(2) { border-right: 0; }
+      .support-grid { grid-template-columns: 1fr; }
+      .support-card { min-height: auto; }
+      .support-card .button { margin-top: 1.5rem; }
+    }
+
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 28px, 1180px); }
+      .nav-inner { height: 70px; }
+      .brand span { display: none; }
+      .nav-cta { padding: .5rem .7rem; font-size: .7rem !important; }
+      .lang-switcher a { min-width: 29px; padding-inline: .34rem; }
+      .hero { min-height: 94svh; background-position: 58% center; }
+      .hero::before { background: linear-gradient(to top, rgba(7,26,22,.96) 8%, rgba(7,26,22,.65) 65%, rgba(7,26,22,.18)); }
+      .hero-content { padding-block: 8rem 3.2rem; }
+      h1 { font-size: clamp(3.25rem, 17vw, 5rem); }
+      .button-row { flex-direction: column; align-items: stretch; }
+      .hero-note { gap: .7rem 1rem; }
+      .story-photo img { aspect-ratio: 4 / 5; }
+      .manifesto-card { min-height: 520px; border-radius: 0; margin-inline: -14px; }
+      .principle-grid { grid-template-columns: 1fr; }
+      .principle, .principle + .principle { padding: 1.5rem 0; border-right: 0; border-bottom: 1px solid var(--line); }
+      .experience-visual img { height: 360px; }
+      .experience-visual img:last-child { height: 300px; margin-top: 34px; }
+      .coupon { grid-template-columns: 1fr; }
+      .contact-inner { display: block; }
+      .contact-actions { margin-top: 1.5rem; justify-content: stretch; }
+      .contact-actions .button { flex: 1 1 180px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-meta { text-align: left; }
+      .legal { margin-left: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+  <script>
+    (function () {
+      if (location.pathname !== "/" && location.pathname !== "/index.html") return;
+      var saved = localStorage.getItem("kinha-language");
+      var browser = (navigator.language || "").toLowerCase().slice(0, 2);
+      var preferred = saved || browser;
+      if (preferred === "en") location.replace("/en/");
+      if (preferred === "fr") location.replace("/fr/");
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Skip to content</a>
+
+  <nav aria-label="Main navigation">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#inicio" aria-label="Kin-Ha Experience, home">
+        <strong>Kin-Ha</strong><span>Experience</span>
+      </a>
+      <div class="nav-links">
+        <a href="#historia">Our story</a>
+        <a href="#compromiso">Commitment</a>
+        <a href="#contribuir">Selva Guardian</a>
+        <div class="lang-switcher" role="group" aria-label="Language">
+          <a href="/" onclick="localStorage.setItem('kinha-language','es')">ES</a>
+          <a class="active" href="/en/" aria-current="page" onclick="localStorage.setItem('kinha-language','en')">EN</a>
+          <a href="/fr/" onclick="localStorage.setItem('kinha-language','fr')">FR</a>
+        </div>
+        <a class="nav-cta" href="https://cenotekinha.com/">Visit</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="contenido">
+    <header class="hero" id="inicio">
+      <div class="wrap hero-content">
+        <p class="eyebrow">Puerto Morelos · Route of the Cenotes</p>
+        <h1>The jungle isn’t simply visited. It’s experienced.</h1>
+        <p class="lead">Kin-Ha is ancient water, living stone and shared memory. Let your visit become a deeper, more conscious connection with this extraordinary place.</p>
+        <div class="button-row">
+          <a class="button primary" href="#historia">Discover our story</a>
+          <a class="button ghost" href="#contribuir">Support with clarity</a>
+        </div>
+        <div class="hero-note" aria-label="Kin-Ha highlights">
+          <span>Two cenotes</span><span>Locally led</span><span>Voluntary contributions</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="story" id="historia">
+      <div class="wrap story-grid">
+        <div class="story-copy">
+          <p class="eyebrow dark">A story born in the jungle</p>
+          <h2>Kin-Ha is part of the living history of the Route of the Cenotes.</h2>
+          <p>Before becoming a meeting place for travelers, Kin-Ha grew from a local family’s bond with the water, stone and jungle of Puerto Morelos. In time, this remarkable landscape opened its doors so more people could experience it with respect.</p>
+          <p>Today, we want every visit to leave behind more than a photograph: curiosity, gratitude and a desire to help protect the natural world that made the experience possible.</p>
+          <p class="signature">Ancient water. Living stone. A jungle that endures.</p>
+        </div>
+        <figure class="story-photo">
+          <img src="/assets/kinha-cenote-couple.webp" alt="Visitors admire the interior of Kin-Ha Cenote" loading="lazy" width="1400" height="933">
+          <figcaption>A moment to pause, listen and understand the place welcoming us.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="manifesto" aria-label="Conservation manifesto">
+      <div class="wrap">
+        <div class="manifesto-card">
+          <div class="manifesto-copy">
+            <p class="eyebrow">Selva Guardian</p>
+            <h2>To experience this place is also to learn how to care for it.</h2>
+            <p>Selva Guardian is a private, voluntary initiative by Cenotes Kin-Ha created to support practical environmental care. Its purpose is simple: connect visitors and partners with projects that can be clearly explained, documented and carried out responsibly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="principles" id="compromiso">
+      <div class="wrap">
+        <div class="principles-head">
+          <div>
+            <p class="eyebrow dark">Our approach</p>
+            <h2>Conservation without empty promises.</h2>
+          </div>
+          <p>We would rather promise less and deliver more. Every initiative must have a clear purpose and a scope we can responsibly sustain.</p>
+        </div>
+        <div class="principle-grid">
+          <article class="principle"><span class="number">01</span><h3>Water</h3><p>Encourage visitor practices that reduce impact around the cenotes.</p></article>
+          <article class="principle"><span class="number">02</span><h3>Jungle</h3><p>Prioritize native species and actions compatible with the local ecosystem.</p></article>
+          <article class="principle"><span class="number">03</span><h3>Evidence</h3><p>Document the intended use and available follow-up for every supported initiative.</p></article>
+          <article class="principle"><span class="number">04</span><h3>Community</h3><p>Invite visitors, team members and partners to participate voluntarily and with clear information.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contribute" id="contribuir">
+      <div class="wrap">
+        <div class="contribute-head">
+          <p class="eyebrow">Contribute with purpose</p>
+          <h2>Choose the level of participation that feels right for you.</h2>
+          <p>Before accepting a contribution, we will explain its proposed purpose, the scope of the action and the follow-up available. Nothing is charged automatically from this page.</p>
+        </div>
+        <div class="support-grid">
+          <article class="support-card">
+            <span class="support-kicker">One-time contribution</span>
+            <div class="support-price">$15 <small>USD</small></div>
+            <h3>Seed</h3>
+            <p>An accessible contribution to support environmental care and maintenance actions communicated by Kin-Ha.</p>
+            <a class="button ghost" href="mailto:luis@kinhaexperience.com?subject=Selva%20Guardian%20Contribution%20-%20Seed">Request details</a>
+          </article>
+          <article class="support-card">
+            <span class="support-kicker">One-time contribution</span>
+            <div class="support-price">$50 <small>USD</small></div>
+            <h3>Guardian</h3>
+            <p>For those who wish to support a specific action and receive information about its intended use and available follow-up.</p>
+            <a class="button ghost" href="mailto:luis@kinhaexperience.com?subject=Selva%20Guardian%20Contribution%20-%20Guardian">Request details</a>
+          </article>
+          <article class="support-card featured">
+            <span class="support-kicker">Annual program subject to availability</span>
+            <div class="support-price">$99 <small>USD / year</small></div>
+            <h3>Adopt a tree</h3>
+            <p>Learn about the current scope of our native-tree program, identification process and available follow-up before participating.</p>
+            <a class="button primary" href="mailto:luis@kinhaexperience.com?subject=Information%20about%20Adopt%20a%20Tree">Explore the program</a>
+          </article>
+        </div>
+        <div class="trust-note"><strong>Transparency:</strong> Selva Guardian is a private initiative of Cenotes Kin-Ha. Contributions are voluntary, are not investments, generate no financial return and are not tax-deductible. Tax-deductible donation receipts are not issued.</div>
+      </div>
+    </section>
+
+    <section class="experience" id="continuar">
+      <div class="wrap experience-grid">
+        <div class="experience-visual" aria-hidden="true">
+          <img src="/assets/kinha-caverna.webp" alt="" loading="lazy" width="1400" height="1050">
+          <img src="/assets/kinha-visitor.webp" alt="" loading="lazy" width="1100" height="1954">
+        </div>
+        <div class="experience-copy">
+          <p class="eyebrow dark">Your story continues</p>
+          <h2>Return, share and keep your connection with Kin-Ha alive.</h2>
+          <p>Register your visit to receive communications only when you authorize them, share an authentic review and plan your next experience directly with Cenotes Kin-Ha.</p>
+          <div class="coupon">
+            <div class="coupon-code">KINHA-GRACIAS</div>
+            <div><strong>15% off your next visit</strong><p>Thank-you coupon. Confirm validity, availability and restrictions when booking. Cannot be combined with other promotions.</p></div>
+          </div>
+          <div class="button-row">
+            <a class="button dark" href="https://registro.kinhaexperience.com/">Register my visit</a>
+            <a class="button dark" href="https://cenotekinha.com/">Plan my return</a>
+            <a class="button dark" href="https://www.google.com/maps/search/?api=1&amp;query=Cenotes+Kin-Ha+Puerto+Morelos" target="_blank" rel="noopener noreferrer">Find us on Google</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-strip">
+      <div class="wrap contact-inner">
+        <h2>Would you like to learn about an initiative or propose a partnership?</h2>
+        <div class="contact-actions" aria-label="Ways to contact Luis">
+          <a class="button" href="https://wa.me/529982053527?text=Hello%20Luis%2C%20I%20would%20like%20to%20learn%20more%20about%20Kin-Ha%20Experience%20and%20its%20conservation%20initiatives." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a class="button alt" href="mailto:luis@kinhaexperience.com?subject=Kin-Ha%20Experience%20-%20Conservation">Email</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div><div class="footer-brand">Kin-Ha Experience</div><p>Route of the Cenotes · Puerto Morelos<br>Quintana Roo, Mexico</p></div>
+      <div class="footer-meta">
+        <a href="mailto:luis@kinhaexperience.com">luis@kinhaexperience.com</a> · <a href="https://cenotekinha.com/">Visit Cenotes Kin-Ha</a> · <a href="https://registro.kinhaexperience.com/privacy">Privacy notice</a>
+        <p class="legal">Images are from Cenotes Kin-Ha. Information about initiatives and programs may change according to operational scope. Request current terms in writing before contributing. © 2026 Kin-Ha Experience.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
